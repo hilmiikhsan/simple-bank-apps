@@ -20,10 +20,10 @@ We use migrations tools [golang-migrate](https://github.com/golang-migrate/migra
 $ migrate create -ext sql -dir migrations create_something_table
 
 // Up the migrations
-$ migrate -database "postgres://postgres:postgres@localhost:5432/db_name sslmode=disable" -path config/database/postgres up
+$ migrate -database "postgres://postgres:password@localhost:5432/db_name?sslmode=disable" -path config/database/postgres up
 
 // Down the migrations by one
-$ migrate -database "postgres://postgres:postgres@localhost:5432/db_name sslmode=disable" -path config/database/postgres down
+$ migrate -database "postgres://postgres:password@localhost:5432/db_name?sslmode=disable" -path config/database/postgres down
 ```
 
 ## Install All Package
