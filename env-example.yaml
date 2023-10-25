@@ -1,0 +1,25 @@
+app:
+  port: ""
+
+db:
+  driver: "postgres"
+  host: "localhost"
+  port: "5432"
+  user: ""
+  password: ""
+  name: ""
+
+jwt:
+   issuer: ""
+   secret: ""
+   tokenLifeTimeHour: 1
+   maxRefresh: 720
+
+redis:
+  addr: "127.0.0.1:6379"
+  password: ""
+  timeout: 10
+  maxIdle: 10
+
+log:
+  path: ""
