@@ -1,19 +1,19 @@
-# E-WALLET API V1
+# SIMPLE BANK API V1
 
 ## Technology
 
-- Golang `go 1.19`
+- Golang `go 1.21.1`
 - PostgresSQL
 - Redis
 
 ## How to Start Develop
 Before developing this project, you need to do some setup
-1. Setup .env.yml add value from your local source
+1. Setup env.yaml add value from your local source
 2. Run database migrations
     Follow the database migration section below
 
 ## Database Migration
-We use migrations tools [goose](https://github.com/pressly/goose)
+We use migrations tools [golang-migrate](https://github.com/golang-migrate/migrate)
 
 ```$command
 // Create database migrations file
