@@ -11,4 +11,8 @@ var (
 	ErrPleaseReLogin              = errors.New("please re-login")
 	ErrUsernameOrPasswordNotMatch = errors.New("username or password not match")
 	ErrInvalidToken               = errors.New("invalid token")
+	ErrAccountNumberAlreadyExist  = errors.New("account number already exist")
+	ErrAccountNumberNotFound      = errors.New("account number not found")
+	ErrCustomerNotFound           = errors.New("customer not found")
+	ErrAmountNotEnough            = errors.New("amount not enough")
 )
