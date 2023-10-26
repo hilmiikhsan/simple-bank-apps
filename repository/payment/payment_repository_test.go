@@ -41,21 +41,26 @@ func TestMain(m *testing.M) {
 	os.Exit(code)
 }
 
-func createRandomCustomer(t *testing.T, customerRepo customer.CustomerRepository) {
+func createRandomCustomer(t *testing.T, customerRepo customer.CustomerRepository) string {
 	ctx := context.Background()
 	password, err := utils.HashPassword("12345678")
 	require.NoError(t, err)
 
 	arg := model.Customer{
-		Username: "User Test",
-		Password: password,
+		Username:      "User Test",
+		Password:      password,
+		Amount:        50000,
+		AccountNumber: "1234567890",
+		AccountName:   "Account Name",
 	}
 
-	err = customerRepo.Create(ctx, arg)
+	id, err := customerRepo.Create(ctx, arg)
 
 	require.NoError(t, err)
 	require.Equal(t, arg.Username, "User Test")
 	require.Equal(t, arg.Password, password)
+
+	return id
 }
 
 func clearData(t *testing.T, db *sql.DB) {
@@ -70,10 +75,10 @@ func clearData(t *testing.T, db *sql.DB) {
 	}
 }
 
-func TestPaymentRepositorySuccess(t *testing.T) {
+func TestPaymentRepository_Success(t *testing.T) {
 	ctx := context.Background()
 	customerRepo := customer.NewCustomerRepository(TestDb)
-	paymentRepo := NewPaymentRepository(TestDb)
+	paymentRepo := NewPaymentRepository(TestDb, customerRepo)
 
 	createRandomCustomer(t, customerRepo)
 
@@ -82,11 +87,17 @@ func TestPaymentRepositorySuccess(t *testing.T) {
 
 	t.Run("Create payment success", func(t *testing.T) {
 		arg := model.Payment{
-			CustomerID: customer.ID,
-			Amount:     100000,
+			CustomerID:   customer.ID,
+			Amount:       100000,
+			AccuntNumber: "1234567890",
 		}
 
-		err := paymentRepo.Create(ctx, arg)
+		arg2 := model.Customer{
+			ID:     customer.ID,
+			Amount: customer.Amount - arg.Amount,
+		}
+
+		err = paymentRepo.Create(ctx, arg, arg2)
 
 		require.NoError(t, err)
 		require.Equal(t, arg.CustomerID, customer.ID)
@@ -98,17 +109,24 @@ func TestPaymentRepositorySuccess(t *testing.T) {
 	})
 }
 
-func TestPaymentRepositoryFailed(t *testing.T) {
+func TestPaymentRepository_Failed(t *testing.T) {
 	ctx := context.Background()
-	paymentRepo := NewPaymentRepository(TestDb)
+	customerRepo := customer.NewCustomerRepository(TestDb)
+	paymentRepo := NewPaymentRepository(TestDb, customerRepo)
 
 	t.Run("Create payment fail", func(t *testing.T) {
 		arg := model.Payment{
-			CustomerID: "sadad",
-			Amount:     100000,
+			CustomerID:   "sadad",
+			Amount:       100000,
+			AccuntNumber: "1234567890",
 		}
 
-		err := paymentRepo.Create(ctx, arg)
+		arg2 := model.Customer{
+			ID:     "asdasd",
+			Amount: 100000,
+		}
+
+		err := paymentRepo.Create(ctx, arg, arg2)
 
 		require.Error(t, err)
 	})

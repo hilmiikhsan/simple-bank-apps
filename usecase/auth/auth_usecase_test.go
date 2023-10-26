@@ -23,16 +23,18 @@ func TestRegister(t *testing.T) {
 
 	authUC := NewAuthUsecase(mockCustomerRepo, nil, nil)
 
-	mockCustomerRepo.EXPECT().Create(gomock.Any(), gomock.Any()).Return(nil)
+	mockCustomerRepo.EXPECT().Create(gomock.Any(), gomock.Any()).Return("", nil)
 	mockCustomerRepo.EXPECT().List(gomock.Any()).Return(nil, nil)
 
 	password, err := utils.HashPassword("12345678")
 	assert.Nil(t, err)
 	assert.NoError(t, err)
 
-	request := dto.Request{
-		Username: "User Test",
-		Password: password,
+	request := dto.RegisterRequest{
+		Username:      "User Test",
+		Password:      password,
+		AccountNumber: "1234567890",
+		AccountName:   "Account Name",
 	}
 
 	err = authUC.Register(ctx, request)
@@ -56,12 +58,14 @@ func TestLogin(t *testing.T) {
 	hashedPassword, err := utils.HashPassword(password)
 	assert.NoError(t, err)
 
-	requestRegister := dto.Request{
-		Username: "User Test",
-		Password: password,
+	requestRegister := dto.RegisterRequest{
+		Username:      "User Test",
+		Password:      password,
+		AccountNumber: "1234567890",
+		AccountName:   "Account Name",
 	}
 
-	mockCustomerRepo.EXPECT().Create(gomock.Any(), gomock.Any()).Return(nil)
+	mockCustomerRepo.EXPECT().Create(gomock.Any(), gomock.Any()).Return("", nil)
 	mockCustomerRepo.EXPECT().List(gomock.Any()).Return(nil, nil)
 
 	err = authUC.Register(ctx, requestRegister)
@@ -74,7 +78,7 @@ func TestLogin(t *testing.T) {
 
 	mockCustomerRepo.EXPECT().GetByUsername(gomock.Any(), requestRegister.Username).Return(expectedCustomer, nil)
 
-	requestLogin := dto.Request{
+	requestLogin := dto.LoginRequest{
 		Username: "User Test",
 		Password: "12345678",
 	}

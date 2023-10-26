@@ -28,7 +28,7 @@ func TestRegister(t *testing.T) {
 	password, _ := utils.HashPassword("12345678")
 
 	t.Run("success", func(t *testing.T) {
-		mockAuth := dto.Request{
+		mockAuth := dto.RegisterRequest{
 			Username: "User Test",
 			Password: password,
 		}
@@ -50,7 +50,7 @@ func TestRegister(t *testing.T) {
 	})
 
 	t.Run("error", func(t *testing.T) {
-		mockAuth := dto.Request{
+		mockAuth := dto.RegisterRequest{
 			Username: "User Test",
 			Password: "12345",
 		}
@@ -82,7 +82,7 @@ func TestLogin(t *testing.T) {
 	password, _ := utils.HashPassword("12345678")
 
 	t.Run("success", func(t *testing.T) {
-		mockAuth := dto.Request{
+		mockAuth := dto.LoginRequest{
 			Username: "User Test",
 			Password: password,
 		}
@@ -111,7 +111,7 @@ func TestLogin(t *testing.T) {
 	})
 
 	t.Run("error", func(t *testing.T) {
-		mockAuth := dto.Request{
+		mockAuth := dto.LoginRequest{
 			Username: "User Test",
 			Password: "12345",
 		}
