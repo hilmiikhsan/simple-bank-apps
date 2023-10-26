@@ -3,6 +3,7 @@ package customer
 import (
 	"context"
 	"database/sql"
+	"errors"
 
 	"github.com/simple-bank-apps/model"
 )
@@ -11,13 +12,22 @@ type customerRepository struct {
 	db *sql.DB
 }
 
-func (c *customerRepository) Create(ctx context.Context, customer model.Customer) error {
-	_, err := c.db.ExecContext(ctx, createCustomerQuery, customer.Username, customer.Password)
+func (c *customerRepository) Create(ctx context.Context, customer model.Customer) (string, error) {
+	var id string
+	err := c.db.QueryRowContext(
+		ctx,
+		createCustomerQuery,
+		customer.Username,
+		customer.Password,
+		customer.Amount,
+		customer.AccountNumber,
+		customer.AccountName,
+	).Scan(&id)
 	if err != nil {
-		return err
+		return "", err
 	}
 
-	return nil
+	return id, nil
 }
 
 func (c *customerRepository) List(ctx context.Context) ([]model.Customer, error) {
@@ -34,6 +44,9 @@ func (c *customerRepository) List(ctx context.Context) ([]model.Customer, error)
 			&customer.ID,
 			&customer.Username,
 			&customer.Password,
+			&customer.Amount,
+			&customer.AccountNumber,
+			&customer.AccountName,
 		)
 		if err != nil {
 			return nil, err
@@ -56,4 +69,54 @@ func (c *customerRepository) GetByUsername(ctx context.Context, username string)
 	}
 
 	return customer, nil
+}
+
+func (c *customerRepository) GetByAccountNumber(ctx context.Context, accountNumber string) (model.Customer, error) {
+	var customer model.Customer
+	err := c.db.QueryRowContext(ctx, getCustomerByAccountNumberQuery, accountNumber).Scan(
+		&customer.ID,
+		&customer.Username,
+		&customer.Amount,
+		&customer.AccountNumber,
+		&customer.AccountName,
+	)
+	if err != nil {
+		return model.Customer{}, err
+	}
+
+	return customer, nil
+}
+
+func (c *customerRepository) GetByID(ctx context.Context, id string) (model.Customer, error) {
+	var customer model.Customer
+	err := c.db.QueryRowContext(ctx, getCustomerByIDQuery, id).Scan(
+		&customer.ID,
+		&customer.Username,
+		&customer.Amount,
+		&customer.AccountNumber,
+		&customer.AccountName,
+	)
+	if err != nil {
+		return model.Customer{}, err
+	}
+
+	return customer, nil
+}
+
+func (c *customerRepository) UpdateAmountByID(ctx context.Context, tx *sql.Tx, customer model.Customer) error {
+	result, err := tx.ExecContext(ctx, updateAmountByIDQuery, customer.ID, customer.Amount)
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected == 0 {
+		return errors.New("no rows updated")
+	}
+
+	return nil
 }

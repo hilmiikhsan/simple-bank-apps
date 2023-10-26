@@ -36,15 +36,15 @@ func (m *MockPaymentUsecase) EXPECT() *MockPaymentUsecaseMockRecorder {
 }
 
 // Payment mocks base method.
-func (m *MockPaymentUsecase) Payment(ctx context.Context, req dto.PaymentRequest, userID string) error {
+func (m *MockPaymentUsecase) Payment(ctx context.Context, req dto.PaymentRequest) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Payment", ctx, req, userID)
+	ret := m.ctrl.Call(m, "Payment", ctx, req)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Payment indicates an expected call of Payment.
-func (mr *MockPaymentUsecaseMockRecorder) Payment(ctx, req, userID interface{}) *gomock.Call {
+func (mr *MockPaymentUsecaseMockRecorder) Payment(ctx, req interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Payment", reflect.TypeOf((*MockPaymentUsecase)(nil).Payment), ctx, req, userID)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Payment", reflect.TypeOf((*MockPaymentUsecase)(nil).Payment), ctx, req)
 }

@@ -4,12 +4,14 @@ import (
 	"github.com/simple-bank-apps/config"
 	"github.com/simple-bank-apps/middleware"
 	"github.com/simple-bank-apps/usecase/auth"
+	"github.com/simple-bank-apps/usecase/bank"
 	"github.com/simple-bank-apps/usecase/payment"
 )
 
 type UsecaseManager interface {
 	AuthUsecase() auth.AuthUsecase
 	PaymentUsecase() payment.PaymentUsecase
+	BankUsecase() bank.BankUsecase
 }
 
 func NewUsecaseManager(repo RepositoryManager, jwt middleware.JWT, cfg *config.Config, logger middleware.LogMiddleware) UsecaseManager {
@@ -33,5 +35,9 @@ func (u *usecaseManager) AuthUsecase() auth.AuthUsecase {
 }
 
 func (u *usecaseManager) PaymentUsecase() payment.PaymentUsecase {
-	return payment.NewPaymentUsecase(u.repo.PaymentRepository())
+	return payment.NewPaymentUsecase(u.repo.PaymentRepository(), u.repo.CustomerRepository(), u.repo.BankRepository())
+}
+
+func (u *usecaseManager) BankUsecase() bank.BankUsecase {
+	return bank.NewBankUsecase(u.repo.BankRepository())
 }

@@ -8,6 +8,7 @@ import (
 	"github.com/simple-bank-apps/config"
 	"github.com/simple-bank-apps/config/database/redis"
 	"github.com/simple-bank-apps/delivery/controller/auth"
+	"github.com/simple-bank-apps/delivery/controller/bank"
 	"github.com/simple-bank-apps/delivery/controller/payment"
 	"github.com/simple-bank-apps/manager"
 	"github.com/simple-bank-apps/middleware"
@@ -25,6 +26,7 @@ type appServer struct {
 func (a *appServer) initController() {
 	auth.NewAuthController(a.engine, a.useCaseManager.AuthUsecase(), a.middleware, a.logMiddleware)
 	payment.NewPaymentController(a.engine, a.useCaseManager.PaymentUsecase(), a.middleware, a.logMiddleware)
+	bank.NewBankController(a.engine, a.useCaseManager.BankUsecase(), a.middleware, a.logMiddleware)
 }
 
 func (a *appServer) Run() {

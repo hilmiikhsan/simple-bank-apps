@@ -6,6 +6,7 @@ package mock_customer
 
 import (
 	context "context"
+	sql "database/sql"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
@@ -36,17 +37,48 @@ func (m *MockCustomerRepository) EXPECT() *MockCustomerRepositoryMockRecorder {
 }
 
 // Create mocks base method.
-func (m *MockCustomerRepository) Create(ctx context.Context, customer model.Customer) error {
+func (m *MockCustomerRepository) Create(ctx context.Context, customer model.Customer) (string, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Create", ctx, customer)
-	ret0, _ := ret[0].(error)
-	return ret0
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // Create indicates an expected call of Create.
 func (mr *MockCustomerRepositoryMockRecorder) Create(ctx, customer interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockCustomerRepository)(nil).Create), ctx, customer)
+}
+
+// GetByAccountNumber mocks base method.
+func (m *MockCustomerRepository) GetByAccountNumber(ctx context.Context, accountNumber string) (model.Customer, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetByAccountNumber", ctx, accountNumber)
+	ret0, _ := ret[0].(model.Customer)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetByAccountNumber indicates an expected call of GetByAccountNumber.
+func (mr *MockCustomerRepositoryMockRecorder) GetByAccountNumber(ctx, accountNumber interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByAccountNumber", reflect.TypeOf((*MockCustomerRepository)(nil).GetByAccountNumber), ctx, accountNumber)
+}
+
+// GetByID mocks base method.
+func (m *MockCustomerRepository) GetByID(ctx context.Context, id string) (model.Customer, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetByID", ctx, id)
+	ret0, _ := ret[0].(model.Customer)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetByID indicates an expected call of GetByID.
+func (mr *MockCustomerRepositoryMockRecorder) GetByID(ctx, id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByID", reflect.TypeOf((*MockCustomerRepository)(nil).GetByID), ctx, id)
 }
 
 // GetByUsername mocks base method.
@@ -77,4 +109,18 @@ func (m *MockCustomerRepository) List(ctx context.Context) ([]model.Customer, er
 func (mr *MockCustomerRepositoryMockRecorder) List(ctx interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockCustomerRepository)(nil).List), ctx)
+}
+
+// UpdateAmountByID mocks base method.
+func (m *MockCustomerRepository) UpdateAmountByID(ctx context.Context, tx *sql.Tx, customer model.Customer) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateAmountByID", ctx, tx, customer)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdateAmountByID indicates an expected call of UpdateAmountByID.
+func (mr *MockCustomerRepositoryMockRecorder) UpdateAmountByID(ctx, tx, customer interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAmountByID", reflect.TypeOf((*MockCustomerRepository)(nil).UpdateAmountByID), ctx, tx, customer)
 }

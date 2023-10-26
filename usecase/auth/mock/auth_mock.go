@@ -37,7 +37,7 @@ func (m *MockAuthUsecase) EXPECT() *MockAuthUsecaseMockRecorder {
 }
 
 // Login mocks base method.
-func (m *MockAuthUsecase) Login(ctx context.Context, req dto.Request) (dto.LoginResponse, error) {
+func (m *MockAuthUsecase) Login(ctx context.Context, req dto.LoginRequest) (dto.LoginResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Login", ctx, req)
 	ret0, _ := ret[0].(dto.LoginResponse)
@@ -66,7 +66,7 @@ func (mr *MockAuthUsecaseMockRecorder) Logout(ctx, token interface{}) *gomock.Ca
 }
 
 // Register mocks base method.
-func (m *MockAuthUsecase) Register(ctx context.Context, req dto.Request) error {
+func (m *MockAuthUsecase) Register(ctx context.Context, req dto.RegisterRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Register", ctx, req)
 	ret0, _ := ret[0].(error)

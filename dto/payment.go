@@ -1,5 +1,6 @@
 package dto
 
 type PaymentRequest struct {
-	Amount int `json:"amount" binding:"required"`
+	AccountNumber string `json:"account_number" binding:"required,min=10,max=10"`
+	Amount        int    `json:"amount" binding:"required"`
 }

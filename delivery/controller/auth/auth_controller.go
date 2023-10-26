@@ -20,7 +20,7 @@ type AuthController struct {
 }
 
 func (a *AuthController) Register(c *gin.Context) {
-	var req dto.Request
+	var req dto.RegisterRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, utils.NewBadRequest(validation.FieldErrors(err)))
@@ -29,7 +29,7 @@ func (a *AuthController) Register(c *gin.Context) {
 
 	err := a.authUsecase.Register(c.Request.Context(), req)
 	if err != nil {
-		if strings.Contains(err.Error(), constants.ErrUsernameAlreadyExist.Error()) {
+		if strings.Contains(err.Error(), constants.ErrUsernameAlreadyExist.Error()) || strings.Contains(err.Error(), constants.ErrAccountNumberAlreadyExist.Error()) {
 			c.JSON(http.StatusBadRequest, utils.NewBadRequest(err.Error()))
 			return
 		}
@@ -42,7 +42,7 @@ func (a *AuthController) Register(c *gin.Context) {
 }
 
 func (a *AuthController) Login(c *gin.Context) {
-	var req dto.Request
+	var req dto.LoginRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, utils.NewBadRequest(validation.FieldErrors(err)))
@@ -60,7 +60,7 @@ func (a *AuthController) Login(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, utils.NewSuccessResponseWithData(http.StatusOK, "Success Login Customer", response))
+	c.JSON(http.StatusOK, utils.NewSuccessResponseWithData(http.StatusOK, response, "Success Login Customer"))
 }
 
 func (a *AuthController) Logout(c *gin.Context) {

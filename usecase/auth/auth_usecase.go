@@ -21,7 +21,7 @@ type authUsecase struct {
 	cfg          *config.Config
 }
 
-func (a *authUsecase) Register(ctx context.Context, req dto.Request) error {
+func (a *authUsecase) Register(ctx context.Context, req dto.RegisterRequest) error {
 	password, err := utils.HashPassword(req.Password)
 	if err != nil {
 		return err
@@ -36,11 +36,18 @@ func (a *authUsecase) Register(ctx context.Context, req dto.Request) error {
 		if customer.Username == req.Username {
 			return constants.ErrUsernameAlreadyExist
 		}
+
+		if customer.AccountNumber == req.AccountNumber {
+			return constants.ErrAccountNumberAlreadyExist
+		}
 	}
 
-	err = a.customerRepo.Create(ctx, model.Customer{
-		Username: req.Username,
-		Password: password,
+	_, err = a.customerRepo.Create(ctx, model.Customer{
+		Username:      req.Username,
+		Password:      password,
+		Amount:        50000,
+		AccountNumber: req.AccountNumber,
+		AccountName:   req.AccountName,
 	})
 	if err != nil {
 		return err
@@ -49,7 +56,7 @@ func (a *authUsecase) Register(ctx context.Context, req dto.Request) error {
 	return nil
 }
 
-func (a *authUsecase) Login(ctx context.Context, req dto.Request) (dto.LoginResponse, error) {
+func (a *authUsecase) Login(ctx context.Context, req dto.LoginRequest) (dto.LoginResponse, error) {
 	response := dto.LoginResponse{}
 	var token string
 
