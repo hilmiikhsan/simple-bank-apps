@@ -18,8 +18,8 @@ type MessageSuccess struct {
 
 type MessageSuccessWithData struct {
 	SuccessStatusCode int         `json:"code"`
-	SuccessMessage    string      `json:"message"`
 	ResultData        interface{} `json:"data"`
+	SuccessMessage    string      `json:"message"`
 }
 
 func (e *MessageSuccess) Message() string {
@@ -49,10 +49,10 @@ func NewSuccessResponse(code int, message string) SuccessResponse {
 	}
 }
 
-func NewSuccessResponseWithData(code int, message string, data interface{}) SuccessResponseWithData {
+func NewSuccessResponseWithData(code int, data interface{}, message string) SuccessResponseWithData {
 	return &MessageSuccessWithData{
 		SuccessStatusCode: code,
-		SuccessMessage:    message,
 		ResultData:        data,
+		SuccessMessage:    message,
 	}
 }
