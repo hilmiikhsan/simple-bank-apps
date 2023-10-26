@@ -1,6 +1,8 @@
 package config
 
-import "github.com/spf13/viper"
+import (
+	"github.com/spf13/viper"
+)
 
 type Config struct {
 	App         App         `yaml:"app"`
@@ -42,6 +44,8 @@ type Log struct {
 }
 
 var Cfg *Config
+
+// var Db *sql.DB
 
 func LoadConfig(filename string) (err error) {
 	viper.SetConfigFile(filename)
